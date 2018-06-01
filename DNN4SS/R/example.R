@@ -145,6 +145,7 @@ exampleBinaryClass <- function(){
 ##'
 ##' @export
 exampleMeanEst <- function(Nsample = 20, Nobs = 1000, Ntest = 100, epochs = 20){
+    set.seed(1)
     ## generate dummy data
     ##y_train <- matrix(sample(x=c(1,2,3), size = Nobs, replace = TRUE), nrow = Nobs, ncol = 1)
     y_train <- matrix(runif(Nobs, min = 0, max = 10), nrow = Nobs, ncol = 1)
@@ -152,7 +153,6 @@ exampleMeanEst <- function(Nsample = 20, Nobs = 1000, Ntest = 100, epochs = 20){
     ##y_test <- matrix(sample(x=c(1,2,3), size = Nobs, replace = TRUE), nrow = Nobs/10, ncol = 1)
     y_test <- matrix(runif(Ntest, min = 0, max = 10), nrow = Ntest, ncol = 1)
     x_test <- matrix(rnorm(Ntest*Nsample, mean = y_train, sd = 1), nrow = Ntest, ncol = Nsample)
-
 
     ##y_train <- keras::to_categorical(y_train)
     ##y_test <- keras::to_categorical(y_test)
@@ -162,25 +162,27 @@ exampleMeanEst <- function(Nsample = 20, Nobs = 1000, Ntest = 100, epochs = 20){
 
     ## define the model
     model %>%
-        keras::layer_dense(units = 50, activation = "relu", input_shape = c(Nsample)) %>%
-        keras::layer_dropout(rate = 0.1) %>%
-        keras::layer_dense(units = 50, activation = "relu") %>%
-        keras::layer_dropout(rate = 0.1) %>%
-        keras::layer_dense(units = 50, activation = "relu") %>%
-        keras::layer_dropout(rate = 0.1) %>%
-        keras::layer_dense(units = 50, activation = "relu") %>%
-        keras::layer_dropout(rate = 0.1) %>%
-        keras::layer_dense(units = 50, activation = "relu") %>%
-        keras::layer_dropout(rate = 0.1) %>%
+        keras::layer_dense(units = 100, activation = "relu", input_shape = c(Nsample)) %>%
+        ##keras::layer_dropout(rate = 0.1) %>%
+        keras::layer_dense(units = 100, activation = "relu") %>%
+        ##keras::layer_dropout(rate = 0.1) %>%
+        keras::layer_dense(units = 100, activation = "relu") %>%
+        ##keras::layer_dropout(rate = 0.1) %>%
+        keras::layer_dense(units = 100, activation = "relu") %>%
+        ##keras::layer_dropout(rate = 0.1) %>%
         keras::layer_dense(units = 1, activation = "linear")
 
 
+    eppClose <- function(y_true, y_pred){
+        dist <- abs(y_true/y_pred)
+        return(dist < 0.1)
+    }
 
     ## Compile the model
     model %>% keras::compile(
-                         loss = "mse",
+                         loss = "mean_absolute_percentage_error",
                          optimizer = "rmsprop",
-                         metrics = c("mae")
+                         metrics = "mse",
                      )
 
 
