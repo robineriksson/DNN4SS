@@ -4,7 +4,10 @@ Version: 0.0.0.9000
 Authors@R: person("Robin", "Eriksson", email = "robin.eriksson@it.uu.se", role = c("aut", "cre"))
 Description: The package holds functions that are used to create and use nerual networks in order to
              estimate the sufficienct statistics of a data series.
-Depends: R (>= 3.4.0)
+Depends: R (>= 3.4.0),
+         magrittr (>= 1.5)
 License: MIT
 Encoding: UTF-8
 LazyData: true
+RoxygenNote: 6.0.1
+Imports: keras
